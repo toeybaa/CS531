@@ -4,25 +4,26 @@ DEFAULT_BLOCK_SIZE = 128
 BYTE_SIZE = 256
 
 def main():
-    filename = sys.argv[2]
+    filename = sys.argv[3]
+    cipfilename = sys.argv[4]
+    key = sys.argv[2]
     mode = sys.argv[1]
-    print (mode)
     if mode == '-e':
-        message = input("type the text to encrypt here")
-        pubKeyFilename = input("choose the public key file") + "_pubkey.txt"
-
-        print('Encrypting and writing to %s...' % (filename))
-        encryptedText = encryptAndWriteToFile(filename, pubKeyFilename, message)
+        message = open(filename, 'r').read()
+        pubKeyFilename = key + "_pubkey.txt"
+        print('Encrypting and writing to %s...' % (cipfilename))
+        encryptedText = encryptAndWriteToFile(cipfilename, pubKeyFilename, message)
         print('Encrypted text:')
         print(encryptedText)
     elif mode == '-d':
-        privKeyFilename = input("choose the private key file") + "_privkey.txt"
-        #privKeyFilename = 'pearl_privkey.txt'
+        privKeyFilename = key + "_privkey.txt"
         print('Reading from %s and decrypting...' % (filename))
         decryptedText = readFromFileAndDecrypt(filename, privKeyFilename)
-
         print('Decrypted text:')
         print(decryptedText)
+        file = open(cipfilename, 'w')
+        file.write(decryptedText)
+        file.close()
 
 def getBlocksFromText(message, blockSize=DEFAULT_BLOCK_SIZE):
     messageBytes = message.encode('utf-8')
